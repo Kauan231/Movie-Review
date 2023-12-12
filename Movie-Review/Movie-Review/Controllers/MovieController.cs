@@ -38,7 +38,6 @@ namespace Movie_Review.Controllers
                 movie =  await MovieService.RequestMovieByName(_context, Title);
             }
             return movie;
-            //return await MovieApi.RequestMovieByName("John+Wick"); ;
         }
 
 
