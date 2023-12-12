@@ -27,7 +27,8 @@ namespace Movie_Review.Controllers
             _mapper = mapper;
         }
 
-        // GET: /<MovieController>
+        // GET: /Movie/title/:title (Deactivated)
+        
         [HttpGet]
         public async Task<Movie> GetByName([FromQuery] string Title)
         {
@@ -40,53 +41,21 @@ namespace Movie_Review.Controllers
             //return await MovieApi.RequestMovieByName("John+Wick"); ;
         }
 
-        // GET: /<MovieController>
-        [HttpGet("/teste/")]
-        public async Task<Movie> GetById([FromQuery] string Id)
+
+        // GET /Movie/:id
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(string id)
         {
             Movie movie = new Movie();
-            if (Id != null)
+            if (id != null)
             {
-                movie = await MovieService.RequestMovieById(_context, Id);
+                movie = await MovieService.RequestMovieById(_context, id);
+                return Ok(movie);
             }
 
-            return movie;
-            //return await MovieApi.RequestMovieByName("John+Wick"); ;
-        }
-
-        // GET /<MovieController>/5
-        [HttpGet("{id}")]
-        public IActionResult GetMoviesById(string id)
-        {
-            Movie movie = _context.Movies.FirstOrDefault(movie => movie.imdbID == id);
-            if (movie != null)
-            {
-                ReadMovieDto movieDto = _mapper.Map<ReadMovieDto>(movie);
-                return Ok(movieDto);
-            }
             return NotFound();
         }
 
-        // POST /<MovieController>
-        [HttpPost]
-        public IActionResult Post([FromBody] CreateMovieDto movieDto)
-        {
-            Movie _movie = _mapper.Map<Movie>(movieDto);
-            _context.Movies.Add(_movie);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(GetMoviesById), new { Id = _movie.Id }, movieDto);
-        }
 
-        // PUT api/<MovieController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<MovieController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }
