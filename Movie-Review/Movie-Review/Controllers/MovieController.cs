@@ -28,6 +28,7 @@ namespace Movie_Review.Controllers
             _mapper = mapper;
         }
 
+        
         [HttpGet]
         [Authorize]
         public async Task<ActionResult<Movie>> GetByName([FromQuery] string Title)
