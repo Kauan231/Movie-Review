@@ -29,11 +29,7 @@ namespace Movie_Review.Controllers
         }
 
         // GET: /Movie/title/:title (Deactivated)
-<<<<<<< Updated upstream
         
-=======
-       
->>>>>>> Stashed changes
         [HttpGet]
         [Authorize]
         public async Task<Movie> GetByName([FromQuery] string Title)
