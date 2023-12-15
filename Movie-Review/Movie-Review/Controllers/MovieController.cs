@@ -28,22 +28,29 @@ namespace Movie_Review.Controllers
             _mapper = mapper;
         }
 
-        // GET: /Movie/title/:title (Deactivated)
-<<<<<<< Updated upstream
-        
-=======
-       
->>>>>>> Stashed changes
         [HttpGet]
         [Authorize]
-        public async Task<Movie> GetByName([FromQuery] string Title)
+        public async Task<ActionResult<Movie>> GetByName([FromQuery] string Title)
         {
             Movie movie = new Movie();
             if (Title != null)
             {
-                movie =  await MovieService.RequestMovieByName(_context, Title);
+                try
+                {
+                    movie = await MovieService.RequestMovieByName(_context, Title);
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }     
             }
-            return movie;
+
+            if(movie.Title != null)
+            {
+                return movie;
+            }
+
+            return NotFound("Filme não encontrado");   
         }
 
 
