@@ -8,6 +8,7 @@ using Movie_Review.Models;
 using Movie_Review.Services;
 using System;
 using Movie_Review.Data.Dtos;
+using Microsoft.AspNetCore.Authorization;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -28,8 +29,13 @@ namespace Movie_Review.Controllers
         }
 
         // GET: /Movie/title/:title (Deactivated)
+<<<<<<< Updated upstream
         
+=======
+       
+>>>>>>> Stashed changes
         [HttpGet]
+        [Authorize]
         public async Task<Movie> GetByName([FromQuery] string Title)
         {
             Movie movie = new Movie();
