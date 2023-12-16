@@ -21,7 +21,7 @@ public class Movie
     public string? Country { get; set; }
     public string? Awards { get; set; }
     public string? Poster { get; set; }
-    public List<Rating>? Ratings { get; set; }
+    public List<Rating> Ratings { get; set; }
     public string? Metascore { get; set; }
     public string? imdbRating { get; set; }
     public string? imdbVotes { get; set; }

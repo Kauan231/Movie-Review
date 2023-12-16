@@ -9,6 +9,7 @@ using Movie_Review.Services;
 using System;
 using Movie_Review.Data.Dtos;
 using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel.DataAnnotations;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -28,45 +29,34 @@ namespace Movie_Review.Controllers
             _mapper = mapper;
         }
 
-        
-        [HttpGet]
-        [Authorize]
-        public async Task<ActionResult<Movie>> GetByName([FromQuery] string Title)
+
+        [HttpGet("search")]
+        //[Authorize]
+        // GET /Movie/search?Title=
+        public async Task<ActionResult<SearchResult>> GetByName([FromQuery] [Required(ErrorMessage = "O Titulo é obrigatorio")] string Title)
         {
-            Movie movie = new Movie();
-            if (Title != null)
-            {
-                try
-                {
-                    movie = await MovieService.RequestMovieByName(_context, Title);
-                }
-                catch(Exception ex)
-                {
-                    Console.WriteLine(ex);
-                }     
-            }
+            SearchResult MoviesFound = await MovieService.RequestMovieByName(_context, Title);     
 
-            if(movie.Title != null)
+            if(MoviesFound.Search.Length == 0)
             {
-                return movie;
-            }
-
-            return NotFound("Filme não encontrado");   
+                return NotFound("Filme não encontrado");
+            } 
+            return Ok(MoviesFound);                         
         }
 
 
         // GET /Movie/:id
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(string id)
+        public async Task<IActionResult> GetById([Required(ErrorMessage = "O Id é obrigatorio")] string id)
         {
-            Movie movie = new Movie();
-            if (id != null)
+            Movie movie = await MovieService.RequestMovieById(_context, id);
+
+            if (movie.Equals(null))
             {
-                movie = await MovieService.RequestMovieById(_context, id);
-                return Ok(movie);
+                return NotFound("Filme com ID Solicitado não encontrado");
             }
 
-            return NotFound();
+            return Ok(movie);
         }
 
 

@@ -1,6 +1,6 @@
-﻿using System.Text.Json;
-using System.Net.Http;
+﻿using System.Net.Http;
 using Movie_Review.Models;
+using Newtonsoft.Json;
 
 namespace Movie_Review.Services
 {
@@ -8,26 +8,32 @@ namespace Movie_Review.Services
     {
         private static readonly HttpClient client = new HttpClient();
 
-        private static Movie JsonDeserialize(string serializedContent)
+        private static SearchResult JsonDeserializeList(string serializedContent)
         {
-            Movie DeserializedMovie = JsonSerializer.Deserialize<Movie>(serializedContent);
+            SearchResult DeserializedMovie = JsonConvert.DeserializeObject<SearchResult>(serializedContent);
             return DeserializedMovie;
         }
 
-        public static async Task<Movie> RequestMovieByName(string Movie_Name)
+        private static Movie JsonDeserializeItem(string serializedContent)
+        {
+            Movie DeserializedMovie = JsonConvert.DeserializeObject<Movie>(serializedContent);
+            return DeserializedMovie;
+        }
+
+        public static async Task<SearchResult> RequestMovieByName(string Movie_Name)
         {
             //var response = await client.GetAsync("http://localhost:3000/"); // MOCK
-
-            var response = await client.GetAsync("https://www.omdbapi.com/?apikey=e60a475c&t=" + Movie_Name);
+            //var response = await client.GetAsync("https://www.omdbapi.com/?apikey=e60a475c&t=" + Movie_Name); // ( DEPRECATED )
+            var response = await client.GetAsync("https://www.omdbapi.com/?apikey=e60a475c&s=" + Movie_Name);
             var responseString = await response.Content.ReadAsStringAsync();
-            return JsonDeserialize(responseString);
+            return JsonDeserializeList(responseString);
         }
 
         public static async Task<Movie> RequestMovieById(string IMDb_ID)
         {
             var response = await client.GetAsync("https://www.omdbapi.com/?apikey=e60a475c&i=" + IMDb_ID);
             var responseString = await response.Content.ReadAsStringAsync();
-            return JsonDeserialize(responseString);
+            return JsonDeserializeItem(responseString);
         }
     }
 }

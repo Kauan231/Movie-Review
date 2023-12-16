@@ -28,4 +28,8 @@
     <Folder Include="Migrations\UserContext\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
 </Project>

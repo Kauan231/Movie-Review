@@ -5,12 +5,11 @@ namespace Movie_Review.Services
 {
     public class MovieSql
     {
-        public static Movie RequestMovieByName(MovieContext _context, string Movie_Name)
+        public static SearchResult RequestMovieByName(MovieContext _context, string Movie_Name)
         {
-            Movie movie = _context.Movies.FirstOrDefault(_movie => _movie.Title == Movie_Name);
-            Console.WriteLine("Found: ");
-            Console.WriteLine(movie);
-            return movie;
+            Movie[] movies = _context.Movies.Where(p => p.Title.StartsWith(Movie_Name)).ToArray<Movie>();
+            SearchResult searchResult = new SearchResult(movies);
+            return searchResult;
         }
 
         public static Movie RequestMovieById(MovieContext _context, string IMDb_ID)

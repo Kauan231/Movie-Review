@@ -1,31 +1,40 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Movie_Review.Data;
 using Movie_Review.Models;
+
+//SearchResult (Deprecated)
+/*
+if (movie.Title == null)
+{
+    movie = await MovieApi.RequestMovieByName(Movie_Name);
+    //_context.Movies.Add(movie);
+    //_context.SaveChanges();
+}
+*/
 
 namespace Movie_Review.Services
 {
     public class MovieService
     {
-        public static async Task<Movie> RequestMovieByName(MovieContext _context, string Movie_Name)
+        public static async Task<SearchResult> RequestMovieByName(MovieContext _context, string Movie_Name)
         {
-            Movie movie = MovieSql.RequestMovieByName(_context, Movie_Name);
+            SearchResult Movies = MovieSql.RequestMovieByName(_context, Movie_Name);
 
-            if(movie == null)
+            if(Movies.Search.Length == 0)
             {
-                movie = await MovieApi.RequestMovieByName(Movie_Name);
-                _context.Movies.Add(movie);
-                _context.SaveChanges();
+                Movies = await MovieApi.RequestMovieByName(Movie_Name);
             }
 
-            return movie;
+            return Movies;
         }
 
         public static async Task<Movie> RequestMovieById(MovieContext _context, string IMDb_ID)
         {
             Movie movie = MovieSql.RequestMovieById(_context, IMDb_ID);
 
-            if (movie == null)
+            if (movie.Equals(null))
             {
                 movie = await MovieApi.RequestMovieById(IMDb_ID);
                 _context.Movies.Add(movie);
