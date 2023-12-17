@@ -1,7 +1,8 @@
 ﻿using Movie_Review.Models;
 
+
 namespace Movie_Review.Data.Dtos
-{
+{   
     public class CreateMovieDto
     {
         public string Title { get; set; }

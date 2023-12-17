@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Movie_Review.Data;
 using Movie_Review.Data.Dtos;
 using Movie_Review.Models;
 
@@ -22,9 +24,9 @@ namespace Movie_Review.Services
 
         public async Task SignUser(CreateUserDto dto)
         {
-            User User = _mapper.Map<User>(dto);
+            User UserIdentity = _mapper.Map<User>(dto);
 
-            IdentityResult resultado = await _userManager.CreateAsync(User, dto.Password);
+            IdentityResult resultado = await _userManager.CreateAsync(UserIdentity, dto.Password);     
 
             if (!resultado.Succeeded)
             {
@@ -50,6 +52,20 @@ namespace Movie_Review.Services
 
             return token;
 
+        }
+
+        public async Task RemoveUser(RemoveUserDto dto)
+        {
+            var user = await _userManager.FindByIdAsync(dto.UserIdentityId);
+            if(user == null) {
+                throw new ApplicationException("Usuario não Existe");
+            }
+            var result = await _userManager.DeleteAsync(user);
+
+            if (!result.Succeeded)
+            {
+                throw new ApplicationException("Falha ao remover usuário!");
+            }
         }
     }
 }

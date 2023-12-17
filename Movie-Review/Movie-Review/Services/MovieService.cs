@@ -18,7 +18,7 @@ namespace Movie_Review.Services
 {
     public class MovieService
     {
-        public static async Task<SearchResult> RequestMovieByName(MovieContext _context, string Movie_Name)
+        public static async Task<SearchResult> RequestMovieByName(UserContext _context, string Movie_Name)
         {
             SearchResult Movies = MovieSql.RequestMovieByName(_context, Movie_Name);
 
@@ -30,7 +30,7 @@ namespace Movie_Review.Services
             return Movies;
         }
 
-        public static async Task<Movie> RequestMovieById(MovieContext _context, string IMDb_ID)
+        public static async Task<Movie> RequestMovieById(UserContext _context, string IMDb_ID)
         {
             Movie movie = MovieSql.RequestMovieById(_context, IMDb_ID);
 
@@ -40,6 +40,16 @@ namespace Movie_Review.Services
                 _context.Movies.Add(movie);
                 _context.SaveChanges();
             }
+
+            return movie;
+        }
+
+        //TEST
+        public static async Task<Movie> AddByName(UserContext _context, string Title)
+        {
+            Movie movie = await MovieApi.AddMovieByName(Title);
+            _context.Movies.Add(movie);
+            _context.SaveChanges();
 
             return movie;
         }

@@ -8,11 +8,11 @@ using Movie_Review.Data;
 
 #nullable disable
 
-namespace Movie_Review.Migrations.UserMigrations
+namespace Movie_Review.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20231213004039_CreateUsers")]
-    partial class CreateUsers
+    [Migration("20231217155615_AddedLike")]
+    partial class AddedLike
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -149,6 +149,148 @@ namespace Movie_Review.Migrations.UserMigrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Movie_Review.Models.Like", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ReviewId")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<bool>("isLike")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReviewId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Likes");
+                });
+
+            modelBuilder.Entity("Movie_Review.Models.Movie", b =>
+                {
+                    b.Property<string>("imdbID")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Actors")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Awards")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("BoxOffice")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DVD")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Director")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Genre")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Language")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Metascore")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Plot")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Poster")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Production")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Rated")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Ratings")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Released")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Response")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Runtime")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Website")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Writer")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Year")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("imdbRating")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("imdbVotes")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("imdbID");
+
+                    b.ToTable("Movies");
+                });
+
+            modelBuilder.Entity("Movie_Review.Models.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Rating")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("imdbID")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("imdbID");
+
+                    b.ToTable("Reviews");
+                });
+
             modelBuilder.Entity("Movie_Review.Models.User", b =>
                 {
                     b.Property<string>("Id")
@@ -262,6 +404,59 @@ namespace Movie_Review.Migrations.UserMigrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Movie_Review.Models.Like", b =>
+                {
+                    b.HasOne("Movie_Review.Models.Review", "Review")
+                        .WithMany("Likes")
+                        .HasForeignKey("ReviewId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Movie_Review.Models.User", "User")
+                        .WithMany("Likes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Review");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Movie_Review.Models.Review", b =>
+                {
+                    b.HasOne("Movie_Review.Models.User", "User")
+                        .WithMany("Reviews")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Movie_Review.Models.Movie", "Movies")
+                        .WithMany("Reviews")
+                        .HasForeignKey("imdbID");
+
+                    b.Navigation("Movies");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Movie_Review.Models.Movie", b =>
+                {
+                    b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("Movie_Review.Models.Review", b =>
+                {
+                    b.Navigation("Likes");
+                });
+
+            modelBuilder.Entity("Movie_Review.Models.User", b =>
+                {
+                    b.Navigation("Likes");
+
+                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

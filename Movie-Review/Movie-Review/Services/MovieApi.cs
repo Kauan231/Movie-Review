@@ -35,5 +35,13 @@ namespace Movie_Review.Services
             var responseString = await response.Content.ReadAsStringAsync();
             return JsonDeserializeItem(responseString);
         }
+
+        // TEST
+        public static async Task<Movie> AddMovieByName(string Movie_Name)
+        {
+            var response = await client.GetAsync("https://www.omdbapi.com/?apikey=e60a475c&t=" + Movie_Name); // ( DEPRECATED )
+            var responseString = await response.Content.ReadAsStringAsync();
+            return JsonDeserializeItem(responseString);
+        }
     }
 }

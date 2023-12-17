@@ -20,10 +20,10 @@ namespace Movie_Review.Controllers
     [ApiController]
     public class MovieController : ControllerBase
     {
-        private MovieContext _context;
+        private UserContext _context;
         private IMapper _mapper;
 
-        public MovieController(MovieContext context, IMapper mapper)
+        public MovieController(UserContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -44,6 +44,24 @@ namespace Movie_Review.Controllers
             return Ok(MoviesFound);                         
         }
 
+        // GET /Movie/:id/reviews
+        [HttpGet("{id}/reviews")]
+        public ActionResult<List<ReadReviewDto>> GetMovieReviews([Required(ErrorMessage = "O Id é obrigatorio")] string id)
+        {
+            var response = _context.Reviews.Skip(0).Take(5).Where(review => review.Movies.Reviews.Any(movie => movie.imdbID == id)).ToList();
+
+            var toRead = _mapper.Map<List<ReadReviewDto>>(response);
+
+            toRead.ForEach(review =>
+            {
+                var getLikes = _context.Likes.Skip(0).Take(5).Where(x => x.ReviewId == review.Id);
+                review.LikeCount = getLikes.Count(x => x.isLike == true);
+                review.DislikeCount = getLikes.Count(x => x.isLike == false);
+            });
+
+
+            return Ok(toRead);
+        }
 
         // GET /Movie/:id
         [HttpGet("{id}")]
@@ -57,6 +75,14 @@ namespace Movie_Review.Controllers
             }
 
             return Ok(movie);
+        }
+
+        [HttpGet("AddMovie")]
+        // TEST
+        public async Task<ActionResult<Movie>> AddByName([FromQuery][Required(ErrorMessage = "O Titulo é obrigatorio")] string Title)
+        {
+            Movie MovieAdded = await MovieService.AddByName(_context, Title);
+            return Ok(MovieAdded);
         }
 
 

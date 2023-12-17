@@ -1,11 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Movie_Review.Models;
+namespace Movie_Review.Models
+{
 
 public class Movie
-{
-    [Key]
-    [Required]
+{   
     public int Id { get; set; }
     public string Title { get; set; }
     public string? Year { get; set; }
@@ -25,6 +26,8 @@ public class Movie
     public string? Metascore { get; set; }
     public string? imdbRating { get; set; }
     public string? imdbVotes { get; set; }
+    [Key]
+    [Required]
     public string? imdbID { get; set; }
     public string? Type { get; set; }
     public string? DVD { get; set; }
@@ -32,10 +35,7 @@ public class Movie
     public string? Production { get; set; }
     public string? Website { get; set; }
     public string? Response { get; set; }
+    public virtual ICollection<Review>? Reviews { get; set; }
 }
 
-public class Rating
-{
-    public string Source { get; set; }
-    public string Value { get; set; }
 }
