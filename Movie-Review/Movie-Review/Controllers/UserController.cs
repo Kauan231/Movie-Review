@@ -77,7 +77,7 @@ namespace UsersApi.Controllers
                 var getLikes = _context.Likes.Where(x => x.ReviewId == review.Id);
                 review.LikeCount = getLikes.Count(x => x.isLike == true);
                 review.DislikeCount = getLikes.Count(x => x.isLike == false);
-                bool getMyLike = _context.Likes.Where(x => x.ReviewId == review.Id && x.UserId == id).Any(x => x.isLike);
+                bool getMyLike = getLikes.Where(x => x.ReviewId == review.Id && x.UserId == id).Any(x => x.isLike);
                 review.isLike = getMyLike;
             });
             return Ok(toRead);
